@@ -1,4 +1,4 @@
-module oilmud.io/db
+module oil/db
 
 go 1.21.1
 
