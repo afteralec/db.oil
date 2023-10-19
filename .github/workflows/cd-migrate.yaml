@@ -20,7 +20,7 @@ jobs:
           from: main
           wait: true
       - name: Create password
-        uses: planetscale/create-branch-password@v3
+        uses: planetscale/create-branch-password-action@v3
         id: create_password
         with:
           org_name: oil
