@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Create branch
-      uses: planetscale/create-branch-action@v1
+      uses: planetscale/create-branch-action@v4
       id: create_branch
       with:
         org_name: oil 
