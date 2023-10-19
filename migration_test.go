@@ -1,4 +1,4 @@
-package main
+package oildb
 
 import (
 	"context"
@@ -9,6 +9,15 @@ import (
 	"ariga.io/atlas-go-sdk/atlasexec"
 )
 
+func countMigrations(t *testing.T) int {
+	pattern := filepath.Join("migrations", "*.sql")
+	files, err := filepath.Glob(pattern)
+	if err != nil {
+		t.Errorf("Failed to count migrations: %v", err)
+	}
+	return len(files)
+}
+
 func TestLintMigrations(t *testing.T) {
 	wd, err := os.Getwd()
 	if err != nil {
@@ -18,10 +27,7 @@ func TestLintMigrations(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to create client with err: %v", err)
 	}
-	migrationCount, err := CountMigrations()
-	if err != nil {
-		t.Errorf("Failed counting migrations: %v", err)
-	}
+	migrationCount := countMigrations(t)
 	p := atlasexec.LintParams{}
 	p.DevURL = "mysql://root:pass@127.0.0.1:3306/test"
 	p.DirURL = "file://migrations"
@@ -35,14 +41,4 @@ func TestLintMigrations(t *testing.T) {
 			t.Errorf("%v", file.Error)
 		}
 	}
-}
-
-func CountMigrations() (count int, err error) {
-	pattern := filepath.Join("migrations", "*.sql")
-	files, err := filepath.Glob(pattern)
-	if err != nil {
-		return 0, err
-	}
-	count = len(files)
-	return count, err
 }

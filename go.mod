@@ -1,4 +1,4 @@
-module github.com/afteralec/oil-db
+module oilmud.io/db
 
 go 1.21.1
 
