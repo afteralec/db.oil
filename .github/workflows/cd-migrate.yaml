@@ -27,17 +27,32 @@ jobs:
           database_name: well
           branch_name: cd
           name: cd
+      - name: Setup Atlas
+        uses: ariga/setup-atlas@v0
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.21.x
+      - name: Run Migrations
+        env:
+          PSCALE_USERNAME: ${{ steps.create_password.outputs.username }}
+          PSCALE_PASSWORD: ${{ steps.create_password.outputs.password }}
+          PSCALE_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
+          PSCALE_DB: well
+        run: go run main.go
       - name: Get the new credentials
         run: |
           echo "Hostname: ${{ steps.create_password.outputs.hostname }}" \
           echo "Username: ${{ steps.create_password.outputs.username }}" \
           echo "Password: ${{ steps.create_password.outputs.password }}"
-      - name: Clean up the database branch
-        run: |
-          curl \
-          --request DELETE \
-          --url https://api.planetscale.com/v1/organizations/oil/databases/well/branches/cd \
-          --header "Authorization: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}:${{ secrets.PLANETSCALE_SERVICE_TOKEN }}"    
+      # - name: Clean up the database branch
+      #   run: |
+      #     curl \
+      #     --request DELETE \
+      #     --url https://api.planetscale.com/v1/organizations/oil/databases/well/branches/cd \
+      #     --header "Authorization: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}:${{ secrets.PLANETSCALE_SERVICE_TOKEN }}"    
     # - name: Create a deploy request
     #   uses: planetscale/create-deploy-request-action@v1
     #   id: create_deploy_request
