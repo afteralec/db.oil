@@ -3,6 +3,26 @@ schema "public" {
   collate = "utf8mb4_0900_ai_ci"
 }
 
+table "features" {
+  schema = schema.public
+  column "id" {
+    null = false
+    type = bigint
+    auto_increment = true
+  }
+  column "flag" {
+    null = false
+    type = varchar(255)
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  index "features_flag" {
+    columns = [column.flag]
+    unique = true
+  }
+}
+
 table "players" {
   schema = schema.public
   column "id" {
