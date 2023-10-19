@@ -19,7 +19,6 @@ jobs:
           branch_name: cd
           from: main
           wait: true
-        env:
       - name: Create password
         uses: planetscale/create-branch-password@v3
         id: create_password
