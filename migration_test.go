@@ -1,4 +1,4 @@
-package oildb
+package main
 
 import (
 	"context"
