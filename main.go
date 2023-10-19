@@ -21,7 +21,7 @@ func main() {
 	p := atlasexec.ApplyParams{}
 	p.DirURL = "file://migrations"
 	p.URL = fmt.Sprintf(
-		"mysql://%s:%s@tcp(%s)/%s?tls=true",
+		"mysql://%s:%s@%s/%s?tls=true",
 		os.Getenv("PSCALE_USERNAME"),
 		os.Getenv("PSCALE_PASSWORD"),
 		os.Getenv("PSCALE_HOSTNAME"),
