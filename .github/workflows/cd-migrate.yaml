@@ -32,7 +32,12 @@ jobs:
           echo "Hostname: ${{ steps.create_password.outputs.hostname }}" \
           echo "Username: ${{ steps.create_password.outputs.username }}" \
           echo "Password: ${{ steps.create_password.outputs.password }}"
-
+      - name: Clean up the database branch
+        run: |
+          curl \
+          --request DELETE \
+          --url https://api.planetscale.com/v1/organizations/oil/databases/well/branches/cd \
+          --header "Authorization: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}:${{ secrets.PLANETSCALE_SERVICE_TOKEN }}"    
     # - name: Create a deploy request
     #   uses: planetscale/create-deploy-request-action@v1
     #   id: create_deploy_request
