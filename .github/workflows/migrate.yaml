@@ -7,7 +7,8 @@ on:
       - ".github/workflows/*"
       - "migrations/*"
 jobs:
-    uses: ./.github/workflows/test.yaml
+    test:
+      uses: ./.github/workflows/test.yaml
     create-cd-db:
       needs: [test]
       runs-on: ubuntu-latest
