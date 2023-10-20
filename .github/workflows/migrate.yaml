@@ -47,7 +47,6 @@ jobs:
           database_name: well
           branch_name: cd
           from: main
-          wait: true
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
@@ -92,9 +91,9 @@ jobs:
             SECRET: secret
             DB_URL: ${{ needs.createdb.outputs.db_url }}
         - name: Echo Database URL
+          run: echo "$DATABASE_URL"
           env:
             DATABASE_URL: ${{ steps.decrypt_db_url.outputs.db_url }}
-          run: echo "$DATABASE_URL"
       # - name: Setup Atlas
         # uses: ariga/setup-atlas@v0
       # - name: Checkout
