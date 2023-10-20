@@ -66,11 +66,11 @@ jobs:
         id: build_db_url
         shell: bash
         run: |
-          $db_username="${{ steps.create_password.outputs.username }}"
-          $db_pw="${{ steps.create_password.outputs.password }}"
-          $db_host="${{ steps.create_password.outputs.hostname }}"
-          $db_url="mysql://$db_username:$db_pw@$db_host/well?tls=true"
-          echo "$db_url"
+          echo "mysql://$DB_USERNAME:$DB_PW@$DB_HOST/well?tls=true"
+        env:
+          DB_USERNAME: ${{ steps.create_password.outputs.username }}
+          DB_PW: ${{ steps.create_password.outputs.password }}
+          DB_HOST: ${{ steps.create_password.outputs.hostname }}
     # echo-db-url:
       # runs-on: ubuntu-latest
       # needs: createdb
