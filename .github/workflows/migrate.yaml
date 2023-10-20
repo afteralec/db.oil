@@ -1,4 +1,4 @@
-name: "Migrate Production DB"
+name: Create Deploy Request
 on:
   push:
     branches:
@@ -8,6 +8,7 @@ on:
       - "migrations/*"
 jobs:
     lint:
+      name: Lint Migrations
       runs-on: ubuntu-latest
       services:
         mysql:
@@ -33,7 +34,8 @@ jobs:
             atlas migrate lint --dev-url \
               "mysql://root:pass@127.0.0.1/test" \
               --git-base main
-    createdb:
+    create-cd-database:
+      name: Create CD Database
       needs: lint
       outputs:
         db_url: ${{ steps.encrypt_db_url.outputs.db_url }}
@@ -61,39 +63,14 @@ jobs:
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-      - name: Build Database URL
-        id: build_db_url
-        shell: bash
+      - name: Setup Atlas
+        uses: ariga/setup-atlas@v0
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Apply Migrations
         run: |
-          echo "db_url=mysql://$DB_USERNAME:$DB_PW@$DB_HOST/well?tls=true" >> $GITHUB_OUTPUT
+          atlas migrate apply -u "mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOSTNAME/well?tls=true"
         env:
           DB_USERNAME: ${{ steps.create_password.outputs.username }}
-          DB_PW: ${{ steps.create_password.outputs.password }}
-          DB_HOST: ${{ steps.create_password.outputs.hostname }}
-      - name: Encrypt Database URL
-        id: encrypt_db_url
-        shell: bash
-        run: |
-          echo "db_url=$(gpg --symmetric --batch --passphrase "$SECRET" --output - <(echo "$DB_URL") | base64 -w0)" >> $GITHUB_OUTPUT
-        env:
-          SECRET: secret
-          DB_URL: ${{ steps.build_db_url.outputs.db_url }}
-    echo-db-url:
-      runs-on: ubuntu-latest
-      needs: createdb
-      steps:
-        - name: Decrypt Database URL
-          id: decrypt_db_url
-          shell: bash
-          run: |
-            echo "db_url=$(gpg --decrypt --quiet --batch --passphrase "$SECRET" --output - <(echo "$DB_URL" | base64 --decode))" >> $GITHUB_OUTPUT
-          env:
-            SECRET: secret
-            DB_URL: ${{ needs.createdb.outputs.db_url }}
-        - name: Setup Atlas
-          uses: ariga/setup-atlas@v0
-        - name: Checkout
-          uses: actions/checkout@v4
-        - name: Apply Migrations
-          run: |
-            atlas migrate apply -u "${{ steps.decrypt_db_url.outputs.db_url }}"
+          DB_PASSWORD: ${{ steps.create_password.outputs.password }}
+          DB_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
