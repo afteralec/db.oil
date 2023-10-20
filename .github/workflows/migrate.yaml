@@ -74,3 +74,5 @@ jobs:
           DB_USERNAME: ${{ steps.create_password.outputs.username }}
           DB_PASSWORD: ${{ steps.create_password.outputs.password }}
           DB_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
+    integration-tests:
+      uses: ./.github/workflows/integration-test.yaml
