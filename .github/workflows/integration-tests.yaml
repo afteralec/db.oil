@@ -1,0 +1,11 @@
+name: Integration Tests
+on: [workflow_call]
+jobs:
+  app:
+    name: Website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout App
+        uses: actions/checkout@v4
+        with:
+          repository: afteralec/app.oil
