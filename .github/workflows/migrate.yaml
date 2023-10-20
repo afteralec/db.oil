@@ -86,14 +86,13 @@ jobs:
           id: decrypt_db_url
           shell: bash
           run: |
+            echo "$(gpg --decrypt --quiet --batch --passphrase "$SECRET" --output - <(echo "$DB_URL" | base64 --decode))"
             echo "db_url=$(gpg --decrypt --quiet --batch --passphrase "$SECRET" --output - <(echo "$DB_URL" | base64 --decode))" >> $GITHUB_OUTPUT
           env:
             SECRET: secret
             DB_URL: ${{ needs.createdb.outputs.db_url }}
         - name: Echo Database URL
-          run: echo "$DATABASE_URL"
-          env:
-            DATABASE_URL: ${{ steps.decrypt_db_url.outputs.db_url }}
+          run: echo "${{ steps.decrypt_db_url.outputs.db_url }}"
       # - name: Setup Atlas
         # uses: ariga/setup-atlas@v0
       # - name: Checkout
