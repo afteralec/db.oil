@@ -6,10 +6,6 @@ on:
     paths:
       - ".github/workflows/*"
       - "migrations/*"
-env:
-  PSCALE_ORG_NAME: oil
-  PSCALE_DB_NAME: well
-  PSCALE_BRANCH_NAME: cd
 jobs:
     tests:
       uses: ./.github/workflows/test.yaml
@@ -25,9 +21,9 @@ jobs:
         uses: planetscale/create-branch-action@v4
         id: create_branch
         with:
-          org_name: $PSCALE_ORG_NAME
-          database_name: $PSCALE_DB_NAME
-          branch_name: $PSCALE_BRANCH_NAME 
+          org_name: oil
+          database_name: well
+          branch_name: cd
           from: main
           wait: true
         env:
@@ -37,9 +33,9 @@ jobs:
         uses: planetscale/create-branch-password-action@v3
         id: create_password
         with:
-          org_name: $PSCALE_ORG_NAME
-          database_name: $PSCALE_DB_NAME 
-          branch_name: $PSCALE_BRANCH_NAME
+          org_name: oil
+          database_name: well
+          branch_name: cd
           name: cd
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
