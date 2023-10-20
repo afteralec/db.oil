@@ -40,6 +40,10 @@ jobs:
         uses: ariga/setup-atlas@v0
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Lint Migrations
+        run: |
+          atlas migrate lint --dev-url \
+            "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/well?tls=true"
       - name: Apply Migrations
         run: |
           atlas migrate apply -u "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/well?tls=true"
