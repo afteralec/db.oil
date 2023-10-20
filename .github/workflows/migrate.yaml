@@ -68,6 +68,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Apply Migrations
         run: |
-          $db_username="${{ steps.create_password.outputs.username }}"
-          $db_password="${{ steps.create_password.outputs.password }}"
-          atlas migrate apply -u "mysql://$db_username:$db_password@${{ steps.create_password.outputs.hostname }}/well?tls=true"
+          atlas migrate apply -u "mysql://$DB_USERNAME:$DB_PASSWORD@${{ steps.create_password.outputs.hostname }}/well?tls=true"
+        env:
+          DB_USERNAME: ${{ steps.create_password.outputs.username }}
+          DB_PASSWORD: ${{ steps.create_password.outputs.password }}
