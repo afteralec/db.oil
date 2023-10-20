@@ -75,4 +75,5 @@ jobs:
           DB_PASSWORD: ${{ steps.create_password.outputs.password }}
           DB_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
     integration-tests:
+      needs: create-cd-database
       uses: ./.github/workflows/integration-tests.yaml
