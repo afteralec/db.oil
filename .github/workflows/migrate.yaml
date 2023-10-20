@@ -36,7 +36,7 @@ jobs:
     createdb:
       needs: lint
       outputs:
-        db_url: ${{ steps.build_db_url.outputs.db_url }}
+        db_url: ${{ steps.encrypt_db_url.outputs.db_url }}
       runs-on: ubuntu-latest
       steps:
       - name: Create branch
@@ -66,19 +66,35 @@ jobs:
         id: build_db_url
         shell: bash
         run: |
-          echo "mysql://$DB_USERNAME:$DB_PW@$DB_HOST/well?tls=true"
+          echo "::set_output name=db_url::mysql://$DB_USERNAME:$DB_PW@$DB_HOST/well?tls=true"
         env:
           DB_USERNAME: ${{ steps.create_password.outputs.username }}
           DB_PW: ${{ steps.create_password.outputs.password }}
           DB_HOST: ${{ steps.create_password.outputs.hostname }}
-    # echo-db-url:
-      # runs-on: ubuntu-latest
-      # needs: createdb
-      # steps:
-        # - name: Echo Database URL
-          # env:
-            # DATABASE_URL: ${{ needs.createdb.outputs.db_url }}
-          # run: echo "$DATABASE_URL"
+      - name: Encrypt Database URL
+        id: encrypt_db_url
+        shell: bash
+        run: |
+          echo "::set-output name=db_url::$(gpg --symmetric --batch --passphrase "$SECRET" --output - <(echo "$DB_URL") | base64 -w0)"
+        env:
+          SECRET: secret
+          DB_URL: ${{ steps.build_db_url.db_url }}
+    echo-db-url:
+      runs-on: ubuntu-latest
+      needs: createdb
+      steps:
+        - name: Decrypt Database URL
+          id: decrypt_db_url
+          shell: bash
+          run: |
+            echo "::set-output name=db_url::$(gpg --decrypt --quiet --batch --passphrase "$SECRET" --output - <(echo "$DB_URL" | base64 --decode))"
+          env:
+            SECRET: secret
+            DB_URL: ${{ needs.createdb.outputs.db_url }}
+        - name: Echo Database URL
+          env:
+            DATABASE_URL: ${{ steps.decrypt_db_url.outputs.db_url }}
+          run: echo "$DATABASE_URL"
       # - name: Setup Atlas
         # uses: ariga/setup-atlas@v0
       # - name: Checkout
