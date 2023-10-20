@@ -86,17 +86,14 @@ jobs:
           id: decrypt_db_url
           shell: bash
           run: |
-            echo "$(gpg --decrypt --batch --passphrase "$SECRET" --output - <(echo "$DB_URL" | base64 --decode))"
             echo "db_url=$(gpg --decrypt --quiet --batch --passphrase "$SECRET" --output - <(echo "$DB_URL" | base64 --decode))" >> $GITHUB_OUTPUT
           env:
             SECRET: secret
             DB_URL: ${{ needs.createdb.outputs.db_url }}
-        - name: Echo Database URL
-          run: echo "${{ steps.decrypt_db_url.outputs.db_url }}"
-      # - name: Setup Atlas
-        # uses: ariga/setup-atlas@v0
-      # - name: Checkout
-        # uses: actions/checkout@v4
-      # - name: Apply Migrations
-        # run: |
-          # atlas migrate apply -u "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/well?tls=true"
+        - name: Setup Atlas
+          uses: ariga/setup-atlas@v0
+        - name: Checkout
+          uses: actions/checkout@v4
+        - name: Apply Migrations
+          run: |
+          atlas migrat apply -u "${{ steps.decrypt_db_url.outputs.db_url }}"
