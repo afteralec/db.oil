@@ -29,6 +29,7 @@ jobs:
           database_name: $PSCALE_DB_NAME
           branch_name: $PSCALE_BRANCH_NAME 
           from: main
+          wait: true
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
