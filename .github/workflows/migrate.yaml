@@ -67,5 +67,4 @@ jobs:
         uses: actions/checkout@v4
       - name: Apply Migrations
         run: |
-          atlas migrate apply --url \
-            "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/well?tls=true"
+          atlas migrate apply -u "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/well?tls=true"
