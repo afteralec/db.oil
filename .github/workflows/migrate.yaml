@@ -66,7 +66,7 @@ jobs:
         id: build_db_url
         shell: bash
         run: |
-          echo "::set_output name=db_url::mysql://$DB_USERNAME:$DB_PW@$DB_HOST/well?tls=true"
+          echo "db_url=mysql://$DB_USERNAME:$DB_PW@$DB_HOST/well?tls=true" >> $GITHUB_OUTPUT
         env:
           DB_USERNAME: ${{ steps.create_password.outputs.username }}
           DB_PW: ${{ steps.create_password.outputs.password }}
@@ -75,7 +75,7 @@ jobs:
         id: encrypt_db_url
         shell: bash
         run: |
-          echo "::set-output name=db_url::$(gpg --symmetric --batch --passphrase "$SECRET" --output - <(echo "$DB_URL") | base64 -w0)"
+          echo "db_url=$(gpg --symmetric --batch --passphrase "$SECRET" --output - <(echo "$DB_URL") | base64 -w0)" >> $GITHUB_OUTPUT
         env:
           SECRET: secret
           DB_URL: ${{ steps.build_db_url.db_url }}
@@ -87,7 +87,7 @@ jobs:
           id: decrypt_db_url
           shell: bash
           run: |
-            echo "::set-output name=db_url::$(gpg --decrypt --quiet --batch --passphrase "$SECRET" --output - <(echo "$DB_URL" | base64 --decode))"
+            echo "db_url=$(gpg --decrypt --quiet --batch --passphrase "$SECRET" --output - <(echo "$DB_URL" | base64 --decode))" >> $GITHUB_OUTPUT
           env:
             SECRET: secret
             DB_URL: ${{ needs.createdb.outputs.db_url }}
