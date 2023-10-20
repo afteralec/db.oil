@@ -43,7 +43,8 @@ jobs:
       - name: Lint Migrations
         run: |
           atlas migrate lint --dev-url \
-            "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/well?tls=true"
+            "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/well?tls=true" \
+            --git-base main
       - name: Apply Migrations
         run: |
           atlas migrate apply -u "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/well?tls=true"
