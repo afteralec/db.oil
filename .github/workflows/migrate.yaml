@@ -1,0 +1,85 @@
+name: "Migrate Production DB"
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/*"
+      - "migrations/*"
+env:
+  PSCALE_ORG_NAME: oil
+  PSCALE_DB_NAME: well
+  PSCALE_BRANCH_NAME: cd
+jobs:
+    tests:
+      uses: ./.github/workflows/test.yaml
+    migrate:
+      name: migrate
+      needs: [tests]
+      runs-on: ubuntu-latest
+      env:
+        PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+        PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      steps:
+      - name: Create branch
+        uses: planetscale/create-branch-action@v4
+        id: create_branch
+        with:
+          org_name: oil
+          database_name: well
+          branch_name: cd
+          from: main
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      - name: Create password
+        uses: planetscale/create-branch-password-action@v3
+        id: create_password
+        with:
+          org_name: oil
+          database_name: well
+          branch_name: cd
+          name: cd
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      - name: Setup Atlas
+        uses: ariga/setup-atlas@v0
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.21.x
+      - name: Run Migrations
+        env:
+          PSCALE_USERNAME: ${{ steps.create_password.outputs.username }}
+          PSCALE_PASSWORD: ${{ steps.create_password.outputs.password }}
+          PSCALE_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
+        run: go run main.go
+      - name: Create a deploy request
+        uses: planetscale/create-deploy-request-action@v1
+        id: create_deploy_request
+        with:
+          org_name: oil
+          database_name: well
+          branch_name: cd
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      - name: Deploy a deploy request
+        uses: planetscale/deploy-deploy-request-action@v1
+        with:
+          org_name: oil
+          database_name: well 
+          number: ${{ steps.create_deploy_request.outputs.number }}
+          wait: true
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      - name: Clean up the database branch
+        run: |
+          curl \
+          --request DELETE \
+          --url https://api.planetscale.com/v1/organizations/oil/databases/well/branches/cd \
+          --header "Authorization: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}:${{ secrets.PLANETSCALE_SERVICE_TOKEN }}"    

@@ -25,7 +25,7 @@ func main() {
 		os.Getenv("PSCALE_USERNAME"),
 		os.Getenv("PSCALE_PASSWORD"),
 		os.Getenv("PSCALE_HOSTNAME"),
-		os.Getenv("PSCALE_DB"),
+		os.Getenv("PSCALE_DB_NAME"),
 	)
 	report, err := client.Apply(context.Background(), &p)
 	if err != nil {
