@@ -7,10 +7,10 @@ on:
       - ".github/workflows/*"
       - "migrations/*"
 jobs:
-    tests:
+    test:
       uses: ./.github/workflows/test.yaml
     create-cd-db:
-      needs: [tests]
+      needs: [test]
       runs-on: ubuntu-latest
       steps:
       - name: Create branch
@@ -38,16 +38,6 @@ jobs:
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
       - name: Setup Atlas
         uses: ariga/setup-atlas@v0
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: 1.21.x
-      - name: Run Migrations
-        env:
-          PSCALE_USERNAME: ${{ steps.create_password.outputs.username }}
-          PSCALE_PASSWORD: ${{ steps.create_password.outputs.password }}
-          PSCALE_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
-          PSCALE_DB_NAME: well
-        run: go run main.go
+      - name: Apply Migrations
+        run: |
+          atlas migrate apply -u "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/cd?tls=true"
