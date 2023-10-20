@@ -25,9 +25,9 @@ jobs:
         uses: planetscale/create-branch-action@v4
         id: create_branch
         with:
-          org_name: oil
-          database_name: well
-          branch_name: cd
+          org_name: $PSCALE_ORG_NAME
+          database_name: $PSCALE_DB_NAME
+          branch_name: $PSCALE_BRANCH_NAME 
           from: main
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
@@ -36,9 +36,9 @@ jobs:
         uses: planetscale/create-branch-password-action@v3
         id: create_password
         with:
-          org_name: oil
-          database_name: well
-          branch_name: cd
+          org_name: $PSCALE_ORG_NAME
+          database_name: $PSCALE_DB_NAME 
+          branch_name: $PSCALE_BRANCH_NAME
           name: cd
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
@@ -56,6 +56,7 @@ jobs:
           PSCALE_USERNAME: ${{ steps.create_password.outputs.username }}
           PSCALE_PASSWORD: ${{ steps.create_password.outputs.password }}
           PSCALE_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
+          PSCALE_DB_NAME: well
         run: go run main.go
       - name: Create a deploy request
         uses: planetscale/create-deploy-request-action@v1
