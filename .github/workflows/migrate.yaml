@@ -7,8 +7,7 @@ on:
       - ".github/workflows/*"
       - "migrations/*"
 jobs:
-    test:
-      uses: ./.github/workflows/test.yaml
+    uses: ./.github/workflows/test.yaml
     create-cd-db:
       needs: [test]
       runs-on: ubuntu-latest
@@ -38,6 +37,8 @@ jobs:
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
       - name: Setup Atlas
         uses: ariga/setup-atlas@v0
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Apply Migrations
         run: |
           atlas migrate apply -u "mysql://${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/cd?tls=true"
