@@ -75,5 +75,31 @@ jobs:
           DB_PASSWORD: ${{ steps.create_password.outputs.password }}
           DB_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
   integration-tests:
+    name: App Integration Tests
     needs: create-cd-database
-    uses: ./.github/workflows/integration-tests.yaml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create password
+        uses: planetscale/create-branch-password-action@v3
+        id: create_password
+        with:
+          org_name: oil
+          database_name: well
+          branch_name: cd
+          name: cd-integ-tests-app
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: afteralec/app.oil
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.21.x
+      - name: Integration Tests
+        run: |
+          go test ./tests/...
+        env:
+          DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@${{ steps.create_password.outputs.hostname }}/well?tls=true"
