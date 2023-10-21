@@ -7,7 +7,6 @@ jobs:
     steps:
       - name: Create password
         uses: planetscale/create-branch-password-action@v3
-        id: create_password
         with:
           org_name: oil
           database_name: well
