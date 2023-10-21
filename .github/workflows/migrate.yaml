@@ -69,7 +69,7 @@ jobs:
       - name: Apply Migrations
         run: |
           atlas migrate apply --url \
-            "mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOSTNAME/well?ssl=true"
+            "mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOSTNAME/well?tls=true"
         env:
           DB_USERNAME: ${{ steps.create_password.outputs.username }}
           DB_PASSWORD: ${{ steps.create_password.outputs.password }}
