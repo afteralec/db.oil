@@ -59,6 +59,7 @@ jobs:
           database_name: well
           branch_name: cd
           name: cd-migrate
+          role: readerwriter
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
@@ -74,6 +75,4 @@ jobs:
           DB_USERNAME: ${{ steps.create_password.outputs.username }}
           DB_PASSWORD: ${{ steps.create_password.outputs.password }}
           DB_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
-    integration-tests:
-      needs: create-cd-database
-      uses: ./.github/workflows/integration-tests.yaml
+
