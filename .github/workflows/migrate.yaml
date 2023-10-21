@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/*"
+      - ".github/workflows/migrate.yaml"
       - "migrations/*"
 jobs:
   lint:
@@ -74,7 +74,7 @@ jobs:
           DB_USERNAME: ${{ steps.create_password.outputs.username }}
           DB_PASSWORD: ${{ steps.create_password.outputs.password }}
           DB_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
-  integration-tests:
+  app-integration-tests:
     name: App Integration Tests
     needs: create-cd-database
     runs-on: ubuntu-latest
@@ -100,7 +100,17 @@ jobs:
           go-version: 1.21.x
       - name: Integration Tests
         run: |
-          go test ./tests/...
+          go test -v ./tests/...
         env:
           RUN_INTEGRATION_TESTS: true
           DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@tcp(${{ steps.create_password.outputs.hostname }})/well?tls=true"
+      - name: Create a deploy request
+        uses: planetscale/create-deploy-request-action@v1
+        id: create_deploy_request
+        with:
+          org_name: oil
+          database_name: well
+          branch_name: cd
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
