@@ -86,7 +86,7 @@ jobs:
             org_name: oil
             database_name: well
             branch_name: cd
-            name: cd-migrate
+            name: cd-integ-tests-app
           env:
             PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
             PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
