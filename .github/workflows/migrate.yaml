@@ -104,6 +104,31 @@ jobs:
         env:
           RUN_INTEGRATION_TESTS: true
           DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@tcp(${{ steps.create_password.outputs.hostname }})/well?tls=true"
+  game-integration-tests:
+    name: Game Integration Tests
+    needs: create-cd-database
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create password
+        uses: planetscale/create-branch-password-action@v3
+        id: create_password
+        with:
+          org_name: oil
+          database_name: well
+          branch_name: cd
+          name: cd-integ-tests-game
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: afteralec/game.oil
+  create-deploy-request:
+    name: Create a Deploy Request
+    needs: [app-integration-tests, game-integration-tests]
+    runs-on: ubuntu-latest
+    steps:
       - name: Create a deploy request
         uses: planetscale/create-deploy-request-action@v1
         id: create_deploy_request
