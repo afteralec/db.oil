@@ -102,4 +102,5 @@ jobs:
         run: |
           go test ./tests/...
         env:
+          RUN_INTEGRATION_TESTS: true
           DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@tcp(${{ steps.create_password.outputs.hostname }})/well?tls=true"
