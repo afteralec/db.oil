@@ -7,89 +7,89 @@ on:
       - ".github/workflows/*"
       - "migrations/*"
 jobs:
-    lint:
-      name: Lint Migrations
-      runs-on: ubuntu-latest
-      services:
-        mysql:
-          image: mysql:8
-          env:
-            MYSQL_DATABASE: test
-            MYSQL_ROOT_PASSWORD: pass
-          ports:
-            - 3306:3306
-          options: >-
-            --health-cmd "mysqladmin ping"
-            --health-interval 10s
-            --health-start-period 10s
-            --health-timeout 5s
-            --health-retries 10
-      steps:
-        - name: Setup Atlas
-          uses: ariga/setup-atlas@v0
-        - name: Checkout
-          uses: actions/checkout@v4
-        - name: Lint Migrations
-          run: |
-            atlas migrate lint --dev-url \
-              "mysql://root:pass@127.0.0.1/test" \
-              --git-base main
-    create-cd-database:
-      name: Create CD Database
-      needs: lint
-      runs-on: ubuntu-latest
-      steps:
-        - name: Create branch
-          uses: planetscale/create-branch-action@v4
-          id: create_branch
-          with:
-            org_name: oil
-            database_name: well
-            branch_name: cd
-            from: main
-            wait: true
-          env:
-            PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
-            PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-        - name: Create password
-          uses: planetscale/create-branch-password-action@v3
-          id: create_password
-          with:
-            org_name: oil
-            database_name: well
-            branch_name: cd
-            name: cd-migrate
-          env:
-            PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
-            PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-        - name: Setup Atlas
-          uses: ariga/setup-atlas@v0
-        - name: Checkout
-          uses: actions/checkout@v4
-        - name: Apply Migrations
-          run: |
-            atlas migrate apply --url \
-              "mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOSTNAME/well?tls=true"
-          env:
-            DB_USERNAME: ${{ steps.create_password.outputs.username }}
-            DB_PASSWORD: ${{ steps.create_password.outputs.password }}
-            DB_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
-    test:
-      name: Integration Tests
-      needs: create-cd-database
-      runs-on: ubuntu-latest
-      steps:
-        - name: Create password
-          uses: planetscale/create-branch-password-action@v3
-          id: create_password
-          with:
-            org_name: oil
-            database_name: well
-            branch_name: cd
-            name: cd-integ-tests-app
-          env:
-            PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
-            PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-        - name: Echo credentials
-          run: |
-            echo "${{ steps.create_password.outputs.username }}"
+  lint:
+    name: Lint Migrations
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: test
+          MYSQL_ROOT_PASSWORD: pass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-start-period 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Setup Atlas
+        uses: ariga/setup-atlas@v0
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Lint Migrations
+        run: |
+          atlas migrate lint --dev-url \
+            "mysql://root:pass@127.0.0.1/test" \
+            --git-base main
+  create-cd-database:
+    name: Create CD Database
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create branch
+        uses: planetscale/create-branch-action@v4
+        id: create_branch
+        with:
+          org_name: oil
+          database_name: well
+          branch_name: cd
+          from: main
+          wait: true
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      - name: Create password
+        uses: planetscale/create-branch-password-action@v3
+        id: create_password
+        with:
+          org_name: oil
+          database_name: well
+          branch_name: cd
+          name: cd-migrate
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      - name: Setup Atlas
+        uses: ariga/setup-atlas@v0
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Apply Migrations
+        run: |
+          atlas migrate apply --url \
+            "mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOSTNAME/well?tls=true"
+        env:
+          DB_USERNAME: ${{ steps.create_password.outputs.username }}
+          DB_PASSWORD: ${{ steps.create_password.outputs.password }}
+          DB_HOSTNAME: ${{ steps.create_password.outputs.hostname }}
+  test:
+    name: Integration Tests
+    needs: create-cd-database
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create password
+        uses: planetscale/create-branch-password-action@v3
+        id: create_password
+        with:
+          org_name: oil
+          database_name: well
+          branch_name: cd
+          name: cd-integ-tests-app
+        env:
+          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      - name: Echo credentials
+        run: |
+          echo "${{ steps.create_password.outputs.username }}"
