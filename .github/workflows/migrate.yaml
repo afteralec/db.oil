@@ -104,7 +104,7 @@ jobs:
           go test -v ./tests/...
         env:
           RUN_INTEGRATION_TESTS: true
-          DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@tcp(${{ steps.create_password.outputs.hostname }})/well?tls=true"
+          DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@tcp(${{ steps.create_password.outputs.hostname }})/main?tls=true"
   game-integration-tests:
     name: Game Integration Tests
     needs: create-cd-database
