@@ -26,3 +26,20 @@ table "players" {
     unique = true
   }
 }
+
+table "player_emails" {
+  schema = schema.public
+  column "id" {
+    null = false
+    type = bigint
+    auto_increment = true
+  }
+  column "email" {
+    type = varchar(320)
+    null = false
+  }
+  column "verified" {
+    type = boolean
+    default = false
+  }
+}
