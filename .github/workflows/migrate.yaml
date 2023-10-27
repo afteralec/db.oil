@@ -76,8 +76,8 @@ jobs:
       - name: Setup SQLX
         run: cargo install sqlx-cli
       - name: Apply Migrations
-        run: sqlx migrate run \
-          -D "mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOSTNAME/$DB_NAME?tls=true"
+        run: |
+          sqlx migrate run -D "mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOSTNAME/$DB_NAME?tls=true"
         env:
           DB_NAME: main
           DB_USERNAME: ${{ steps.create_password.outputs.username }}
