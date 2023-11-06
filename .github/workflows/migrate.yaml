@@ -153,14 +153,14 @@ jobs:
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-      - name: Deploy the deploy request
-        uses: planetscale/deploy-deploy-request-action@v1
-        id: deploy_deploy_request
-        with:
-          org_name: petrichormud
-          database_name: main
-          number: ${{ steps.create_deploy_request.outputs.number }}
-          wait: true
-        env:
-          PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
-          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+      # - name: Deploy the deploy request
+      #   uses: planetscale/deploy-deploy-request-action@v1
+      #   id: deploy_deploy_request
+      #   with:
+      #     org_name: petrichormud
+      #     database_name: main
+      #     number: ${{ steps.create_deploy_request.outputs.number }}
+      #     wait: true
+      #   env:
+      #     PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
+      #     PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
