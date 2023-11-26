@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS request_comments
   INDEX request_comment_vid (vid)
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
-CREATE TABLE IF NOT EXISTS request_comments_content
+CREATE TABLE IF NOT EXISTS request_comment_content
 (
   created_at      datetime DEFAULT CURRENT_TIMESTAMP,
   text            varchar(998) NOT NULL,
