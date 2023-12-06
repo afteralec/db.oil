@@ -1,4 +1,5 @@
-CREATE TABLE emails (
+CREATE TABLE emails
+(
   address         varchar(320) NOT NULL,
   created_at      datetime DEFAULT CURRENT_TIMESTAMP,
   updated_at      datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

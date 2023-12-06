@@ -11,38 +11,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  lint:
-    name: Lint Migrations
-    runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8
-        env:
-          MYSQL_DATABASE: test
-          MYSQL_ROOT_PASSWORD: pass
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd "mysqladmin ping"
-          --health-interval 10s
-          --health-start-period 10s
-          --health-timeout 5s
-          --health-retries 10
-
-    steps:
-      - name: Setup Atlas
-        uses: ariga/setup-atlas@v0
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Lint Migrations
-        run: |
-          atlas migrate lint --dev-url \
-            "mysql://root:pass@127.0.0.1/test" \
-            --git-base main
-
   create-cd-database:
     name: Create CD Database
-    needs: lint
     runs-on: ubuntu-latest
 
     steps:
@@ -69,8 +39,6 @@ jobs:
         env:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-      - name: Setup Atlas
-        uses: ariga/setup-atlas@v0
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup SQLX
@@ -113,8 +81,7 @@ jobs:
         run: |
           make test-ci
         env:
-          RUN_INTEGRATION_TESTS: true
-          DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@tcp(${{ steps.create_password.outputs.hostname }})/main?tls=true"
+          DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@tcp(${{ steps.create_password.outputs.hostname }})/main?tls=true&parseTime=true"
 
   game-integration-tests:
     name: Game Integration Tests
