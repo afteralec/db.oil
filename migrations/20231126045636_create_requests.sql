@@ -4,9 +4,10 @@ CREATE TABLE IF NOT EXISTS requests
   status          varchar(10) NOT NULL DEFAULT "Incomplete",
   created_at      datetime DEFAULT CURRENT_TIMESTAMP,
   updated_at      datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  vid             bigint NOT NULL DEFAULT 0,
   pid             bigint NOT NULL,
   id              bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  vid             smallint NOT NULL DEFAULT 0,
+  new             bool NOT NULL DEFAULT false,
   INDEX requests_type (type),
   INDEX requests_pid (pid),
   INDEX requests_vid (vid)
@@ -14,12 +15,12 @@ CREATE TABLE IF NOT EXISTS requests
 
 CREATE TABLE IF NOT EXISTS request_status_changes
 (
-  status  varchar(10) NOT NULL DEFAULT "Incomplete",
-  created_at datetime DEFAULT CURRENT_TIMESTAMP,
-  vid bigint NOT NULL DEFAULT 0,
-  rid bigint NOT NULL,
-  pid bigint NOT NULL,
-  id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  status      varchar(10) NOT NULL DEFAULT "Incomplete",
+  created_at  datetime DEFAULT CURRENT_TIMESTAMP,
+  rid         bigint NOT NULL,
+  pid         bigint NOT NULL,
+  id          bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  vid         smallint NOT NULL DEFAULT 0,
   INDEX request_status_changes_rid (rid),
   INDEX request_status_changes_pid (pid)
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
