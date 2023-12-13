@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS request_comments 
 (
-  created_at  datetime DEFAULT CURRENT_TIMESTAMP,
-  updated_at  datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deleted_at  datetime,
   text        varchar(255) NOT NULL,
   field       varchar(32) NOT NULL DEFAULT "",
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS request_comments
 
 CREATE TABLE IF NOT EXISTS request_comment_history
 (
-  created_at  datetime DEFAULT CURRENT_TIMESTAMP,
+  created_at  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   text        varchar(255) NOT NULL,
   field       varchar(32) NOT NULL DEFAULT "",
   cid         bigint NOT NULL,

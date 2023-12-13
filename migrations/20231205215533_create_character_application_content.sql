@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS character_application_content
 (
-  created_at          datetime DEFAULT CURRENT_TIMESTAMP,
-  updated_at          datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   backstory           varchar(10000) NOT NULL,
   description         varchar(2000) NOT NULL,
   short_description   varchar(300) NOT NULL,
@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS character_application_content
 
 CREATE TABLE IF NOT EXISTS character_application_content_history
 (
-  created_at          datetime DEFAULT CURRENT_TIMESTAMP,
-  updated_at          datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   backstory           varchar(10000) NOT NULL,
   description         varchar(2000) NOT NULL,
   short_description   varchar(300) NOT NULL,

@@ -1,8 +1,8 @@
 CREATE TABLE emails
 (
+  created_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   address         varchar(320) NOT NULL,
-  created_at      datetime DEFAULT CURRENT_TIMESTAMP,
-  updated_at      datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   verified        bool NOT NULL,
   pid             bigint NOT NULL,
   id              bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,

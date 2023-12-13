@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS requests
 (
+  created_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   type            varchar(32) NOT NULL,
   status          varchar(10) NOT NULL DEFAULT "Incomplete",
-  created_at      datetime DEFAULT CURRENT_TIMESTAMP,
-  updated_at      datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   pid             bigint NOT NULL,
   id              bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
   vid             smallint NOT NULL DEFAULT 0,
@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS requests
 
 CREATE TABLE IF NOT EXISTS request_status_changes
 (
+  created_at  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   status      varchar(10) NOT NULL DEFAULT "Incomplete",
-  created_at  datetime DEFAULT CURRENT_TIMESTAMP,
   rid         bigint NOT NULL,
   pid         bigint NOT NULL,
   id          bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
