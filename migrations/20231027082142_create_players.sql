@@ -1,4 +1,5 @@
-CREATE TABLE players (
+CREATE TABLE IF NOT EXISTS players 
+(
   created_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   pw_hash         varchar(255) NOT NULL,

@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS requests
   updated_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   type            varchar(32) NOT NULL,
   status          varchar(10) NOT NULL DEFAULT "Incomplete",
+  rpid            bigint NOT NULL DEFAULT 0,
   pid             bigint NOT NULL,
   id              bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
   vid             smallint NOT NULL DEFAULT 0,
