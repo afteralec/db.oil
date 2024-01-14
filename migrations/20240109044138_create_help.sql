@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS help_tags
   tag     varchar(50) NOT NULL,
   slug    varchar(50) NOT NULL,
   id      bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  INDEX help_tags_tag(tag),
   INDEX help_tags_slug(slug)
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
