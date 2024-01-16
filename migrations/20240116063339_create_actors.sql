@@ -1,10 +1,15 @@
 CREATE TABLE IF NOT EXISTS actor_images
 (
+  created_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   description             varchar(2000) NOT NULL,
   short_description       varchar(300) NOT NULL,
   name                    varchar(50) NOT NULL,
   gender                  varchar(32) NOT NULL,
+  eats_into               bigint NOT NULL DEFAULT 0,
+  sustenance              smallint NOT NULL DEFAULT 0,
   id                      bigint NOT NULL PRIMARY KEY,
+  liquid_capacity         smallint NOT NULL DEFAULT 0,
   seating                 tinyint NOT NULL DEFAULT 0,
   is_container            boolean NOT NULL DEFAULT false,
   is_surface_container    boolean NOT NULL DEFAULT false,
@@ -13,6 +18,8 @@ CREATE TABLE IF NOT EXISTS actor_images
 
 CREATE TABLE IF NOT EXISTS actor_images_can
 (
+  created_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   can     varchar(50) NOT NULL,
   id      bigint NOT NULL PRIMARY KEY,
   INDEX actor_images_can (can)
@@ -20,6 +27,8 @@ CREATE TABLE IF NOT EXISTS actor_images_can
 
 CREATE TABLE IF NOT EXISTS actor_images_can_be
 (
+  created_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   can_be      varchar(50) NOT NULL,
   id          bigint NOT NULL PRIMARY KEY,
   INDEX actor_images_can_be (can_be)
@@ -27,26 +36,34 @@ CREATE TABLE IF NOT EXISTS actor_images_can_be
 
 CREATE TABLE IF NOT EXISTS actor_images_keywords
 (
-  keyword     varchar(10) NOT NULL,
-  aiid        bigint NOT NULL,
-  id          bigint NOT NULL PRIMARY KEY
+  created_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  keyword       varchar(10) NOT NULL,
+  aiid          bigint NOT NULL,
+  id            bigint NOT NULL PRIMARY KEY,
+  INDEX actor_images_keywords_keyword (keyword),
+  UNIQUE INDEX actor_images_keywords_aiid (aiid)
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS actor_images_hands
 (
-  hand    tinyint NOT NULL DEFAULT 1,
-  aiid    bigint NOT NULL,
-  id      bigint NOT NULL PRIMARY KEY,
+  created_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  aiid          bigint NOT NULL,
+  id            bigint NOT NULL PRIMARY KEY,
+  hand          tinyint NOT NULL DEFAULT 1,
   INDEX actor_images_hands_hand (hand),
   INDEX actor_images_hands_aiid (aiid),
-  UNIQUE INDEX actor_images_hands_hand_aiid (hand, aiid)
+  UNIQUE INDEX actor_images_hands_aiid_hand (aiid, hand)
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS actor_images_primary_hand
 (
-  hand    tinyint NOT NULL DEFAULT 1,
-  aiid    bigint NOT NULL,
-  id      bigint NOT NULL PRIMARY KEY,
-  UNIQUE INDEX actor_images_primary_hand_hand_aiid (hand, aiid),
-  INDEX actor_images_primary_hand_aiid (aiid)
+  created_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  aiid          bigint NOT NULL,
+  id            bigint NOT NULL PRIMARY KEY,
+  hand          tinyint NOT NULL DEFAULT 1,
+  INDEX actor_images_primary_hand_aiid (aiid),
+  UNIQUE INDEX actor_images_primary_hand_aiid_hand (aiid, hand)
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
