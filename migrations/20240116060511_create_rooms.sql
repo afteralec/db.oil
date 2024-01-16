@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS room_images
 -- TODO: Index the exits to support search and validation
 CREATE TABLE IF NOT EXISTS rooms
 (
-  image_name    varchar(50) NOT NULL,
   north         bigint NOT NULL DEFAULT 0,
   northeast     bigint NOT NULL DEFAULT 0,
   east          bigint NOT NULL DEFAULT 0,
@@ -22,6 +21,7 @@ CREATE TABLE IF NOT EXISTS rooms
   southwest     bigint NOT NULL DEFAULT 0,
   west          bigint NOT NULL DEFAULT 0,
   northwest     bigint NOT NULL DEFAULT 0,
+  riid          bigint NOT NULL,
   id            bigint NOT NULL PRIMARY KEY,
-  UNIQUE INDEX rooms_image_name (image_name)
+  UNIQUE INDEX rooms_riid (riid)
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
