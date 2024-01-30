@@ -75,9 +75,9 @@ CREATE TABLE IF NOT EXISTS actor_images_container_properties
 (
   created_at              datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at              datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  liquid_capacity         smallint NOT NULL DEFAULT 0,
   aiid                    bigint NOT NULL,
   id                      bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  liquid_capacity         smallint NOT NULL DEFAULT 0,
   is_container            boolean NOT NULL DEFAULT false,
   is_surface_container    boolean NOT NULL DEFAULT false,
   UNIQUE INDEX actor_images_food_properties_aiid (aiid)
