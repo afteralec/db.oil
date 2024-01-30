@@ -79,21 +79,27 @@ jobs:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
         with:
           repository: petrichormud/app
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5.0.0
         with:
           go-version: 1.21.x
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+      - name: NPM Install
+        run: npm install
       - name: Integration Tests
         env:
           DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@tcp(${{ steps.create_password.outputs.hostname }})/main?tls=true&parseTime=true"
         run: |
           make test-ci
 
-  game-integration-tests:
-    name: Game Integration Tests
+  reverie-integration-tests:
+    name: Reverie Integration Tests
     needs: create-cd-database
     runs-on: ubuntu-latest
 
@@ -110,9 +116,9 @@ jobs:
           PLANETSCALE_SERVICE_TOKEN_ID: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_ID }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.1.1
         with:
-          repository: petrichormud/game
+          repository: petrichormud/reverie
 
   deploy:
     name: Deploy
