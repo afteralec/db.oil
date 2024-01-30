@@ -56,7 +56,16 @@ jobs:
     name: App Integration Tests
     needs: create-cd-database
     runs-on: ubuntu-latest
-
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Create password
         uses: planetscale/create-branch-password-action@v3
@@ -78,10 +87,10 @@ jobs:
         with:
           go-version: 1.21.x
       - name: Integration Tests
-        run: |
-          make test-ci
         env:
           DATABASE_URL: "${{ steps.create_password.outputs.username }}:${{ steps.create_password.outputs.password }}@tcp(${{ steps.create_password.outputs.hostname }})/main?tls=true&parseTime=true"
+        run: |
+          make test-ci
 
   game-integration-tests:
     name: Game Integration Tests
