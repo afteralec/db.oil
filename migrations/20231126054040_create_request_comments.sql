@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS request_comments
   resolved    boolean NOT NULL DEFAULT false,
   INDEX request_comments_rid (rid),
   INDEX request_comments_pid (pid),
-  INDEX request_comments_cid (cid)
+  INDEX request_comments_cid (cid),
+  INDEX request_comments_rid_vid (rid, vid)
 );
 
 CREATE TABLE IF NOT EXISTS request_comment_history
