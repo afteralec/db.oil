@@ -16,15 +16,13 @@ CREATE TABLE IF NOT EXISTS character_application_content_review
 (
   created_at          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  name                varchar(10) NOT NULL,
-  gender              varchar(10) NOT NULL,
-  short_description   varchar(10) NOT NULL,
-  description         varchar(10) NOT NULL,
-  backstory           varchar(10) NOT NULL,
+  name                varchar(11) NOT NULL,
+  gender              varchar(11) NOT NULL,
+  short_description   varchar(11) NOT NULL,
+  description         varchar(11) NOT NULL,
+  backstory           varchar(11) NOT NULL,
   rid                 bigint NOT NULL,
-  id                  bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  vid                 smallint NOT NULL DEFAULT 0,
-  UNIQUE INDEX character_application_content_review_rid_vid (rid, vid)
+  id                  bigint NOT NULL AUTO_INCREMENT PRIMARY KEY
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS character_application_content_history
