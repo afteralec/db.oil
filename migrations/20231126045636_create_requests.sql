@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS request_change_requests
   rid           bigint NOT NULL,
   pid           bigint NOT NULL,
   id            bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  locked        boolean NOT NULL DEFAULT false,
   old           boolean NOT NULL DEFAULT false,
   INDEX request_change_requests_rid (rid),
   INDEX request_change_requests_pid (pid),
