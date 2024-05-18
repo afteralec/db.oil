@@ -26,6 +26,16 @@ CREATE TABLE IF NOT EXISTS request_fields
   UNIQUE INDEX request_fields_rid_type (rid, type)
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
+CREATE TABLE IF NOT EXISTS request_sub_fields
+(
+  created_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  value           varchar(10000) NOT NULL,
+  rfid            bigint NOT NULL,
+  id              bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  INDEX request_sub_fields_rfid (rfid),
+) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+
 CREATE TABLE IF NOT EXISTS open_request_change_requests
 (
   created_at    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
