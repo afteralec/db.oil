@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS request_sub_fields
   value           varchar(10000) NOT NULL,
   rfid            bigint NOT NULL,
   id              bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  INDEX request_sub_fields_rfid (rfid),
+  INDEX request_sub_fields_rfid (rfid)
 ) CHARSET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS open_request_change_requests
